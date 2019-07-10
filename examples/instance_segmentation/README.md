@@ -45,3 +45,14 @@ labelme_draw_label_png data_dataset_voc/SegmentationObjectPNG/2011_000003.png  #
 #   - data_dataset_coco/annotations.json
 ./labelme2coco.py data_annotated data_dataset_coco --labels labels.txt
 ```
+
+
+## Convert to Nucleus-format Dataset
+
+```bash
+# It generates:
+#   - data_dataset_voc_separate/prefix_image_n/images
+#   - data_dataset_voc_separate/prefix_image_n/masks
+./labelme2nucleus.py data_annotated data_dataset_nucleus --labels labels.txt
+```
+
