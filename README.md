@@ -1,3 +1,6 @@
+Update 1: I have made some changes in "labelme/examples/instance_segmentation/labelme2voc.py" in order to create segmentation of each object in separate PNG files.
+
+
 <h1 align="center">
   <img src="labelme/icons/icon.png"><br/>labelme
 </h1>
