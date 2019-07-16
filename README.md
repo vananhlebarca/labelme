@@ -1,4 +1,4 @@
-Update 1: I have made some changes in "labelme/examples/instance_segmentation/labelme2voc.py" in order to create segmentation of each object in separate PNG files.
+Update : I have added "labelme/examples/instance_segmentation/labelme2nucleus.py" in order to create the segmentation dataset like nucleus dataset.
 
 
 <h1 align="center">
