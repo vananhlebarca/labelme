@@ -51,8 +51,14 @@ labelme_draw_label_png data_dataset_voc/SegmentationObjectPNG/2011_000003.png  #
 
 ```bash
 # It generates:
-#   - data_dataset_voc_separate/prefix_image_n/images
-#   - data_dataset_voc_separate/prefix_image_n/masks
-./labelme2nucleus.py data_annotated data_dataset_nucleus --labels labels.txt
+#   - data_dataset_nucleus/prefix_image_name/images
+#   - data_dataset_nuclues/prefix_image_name/masks
+./labelme2nucleus.py data_annotated data_dataset_nucleus --labels labels.txt --prefix Jun_20_mice1+2_
 ```
 
+## Convert to Mouse-channel dataset (Each mouse in 1 channel)
+```bash
+# It generates:
+#   - mouse_dataset_channel/prefix_image_name
+python ./labelme2channel.py mouse_annotated mouse_dataset_channel --labels labels_mouse.txt
+```

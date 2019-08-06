@@ -16,11 +16,11 @@ import labelme
 import numpy as np
 from PIL import Image
 
-#prefix = 'Jun_20_mice_1+2_3_'
+prefix = 'Jun_20_mice_1+2_3_'
 #prefix = ''                                         # change this according to the name
 #--------------------------------------------------------
 
-def shapes_to_label_separate(img_shape, shapes, label_name_to_value, type='class'): # by vananh
+def shapes_to_label_separate_channel(img_shape, shapes, label_name_to_value, type='class'): # by vananh
     assert type in ['class', 'instance']
 
     cls = np.zeros(img_shape[:2], dtype=np.int32)
@@ -57,15 +57,11 @@ def main():
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
-
     parser.add_argument('input_dir', help='input annotated directory')
     parser.add_argument('output_dir', help='output dataset directory')
     parser.add_argument('--labels', help='labels file', required=True)
-    parser.add_argument('--prefix', help='prefix string for new name', required=True)
-
     args = parser.parse_args()
 
-    prefix = args.prefix
     if osp.exists(args.output_dir):
         print('Output directory already exists:', args.output_dir)
         sys.exit(1)
@@ -94,27 +90,31 @@ def main():
 
     colormap = labelme.utils.label_colormap(255)
 
+
+
+
+
     for label_file in glob.glob(osp.join(args.input_dir, '*.json')):
         print('Generating dataset from:', label_file)
         with open(label_file) as f:
             base = osp.splitext(osp.basename(label_file))[0]
-            os.makedirs(osp.join(args.output_dir, prefix + base))
+            #os.makedirs(osp.join(args.output_dir, prefix + base))
             #os.makedirs(osp.join(args.output_dir, 'JPEGImages'))
-            os.makedirs(osp.join(args.output_dir + '/' + prefix + base, 'images'))
-            os.makedirs(osp.join(args.output_dir + '/' + prefix + base, 'masks'))
+            #os.makedirs(osp.join(args.output_dir + '/' + prefix + base, 'images'))
+            #os.makedirs(osp.join(args.output_dir + '/' + prefix + base, 'masks'))
             out_img_file = osp.join(
-                args.output_dir, prefix + base, 'images', prefix + base + '.jpg')
+                args.output_dir, prefix + base, 'images', prefix + base + '.png')
 
             data = json.load(f)
 
             img_file = osp.join(osp.dirname(label_file), data['imagePath'])
             img = np.asarray(PIL.Image.open(img_file))
-            img_new = img                                               # change this according to image size
+            #img_new = img                                               # change this according to image size
             #img_new = img[:, 60:1140]									# change this according to image size
-            PIL.Image.fromarray(img_new).save(out_img_file)
+			#PIL.Image.fromarray(img_new).save(out_img_file)
 
-            #cls, ins = labelme.utils.shapes_to_label_separate(
-            cls, ins=shapes_to_label_separate(
+
+            cls, ins=shapes_to_label_separate_channel(
                 img_shape=img.shape,
                 shapes=data['shapes'],
                 label_name_to_value=class_name_to_id,
@@ -123,14 +123,15 @@ def main():
             ins[cls == -1] = 0  # ignore it.
 
             # instance label
-            for i in range(ins.shape[2]):
-                out_insp_file = osp.join(
-                    args.output_dir, prefix + base, 'masks', prefix + base + '_' + str(i) + '.png')
 
-                #array = (ins[:, 60:1140, i]*255).astype(np.uint8)  # change this according to image size
-                array = (ins[:, :, i]*255).astype(np.uint8)			# change this according to image size
-                img = Image.fromarray(array)
-                img.save(out_insp_file)
+
+            out_insp_file = osp.join(args.output_dir, base + '.png')
+            channel = np.zeros((ins.shape[0], ins.shape[1], 3), dtype=np.uint8)
+            channel[:, :, :2] = ins[:, :, :2]*255
+            img = Image.fromarray(channel)
+            img.save(out_insp_file)
+			
+
 
 if __name__ == '__main__':
     main()
